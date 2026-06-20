@@ -1,0 +1,21 @@
+query GetShippingQuoteUsd {
+  shippingQuoteUsd(
+    address: {
+      streetAddress: "1600 Amphitheatre Parkway"
+      city: "Mountain View"
+      state: "CA"
+      country: "United States"
+      zipCode: "94043"
+    }
+    items: [
+      {
+        productId: "OLJCESPC7Z"
+        quantity: 1
+      }
+    ]
+  ) {
+    currencyCode
+    units
+    nanos
+  }
+}
