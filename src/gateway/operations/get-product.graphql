@@ -1,0 +1,14 @@
+query GetProduct {
+  product(id: "0PUK6V6EV0") {
+    id
+    name
+    description
+    picture
+    categories
+    priceUsd {
+      currencyCode
+      units
+      nanos
+    }
+  }
+}

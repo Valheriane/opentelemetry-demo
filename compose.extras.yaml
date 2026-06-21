@@ -7,10 +7,12 @@ services:
     environment:
       PORT: "4000"
       SHIPPING_DGS_URL: "http://shipping-dgs:4004/graphql"
+      PRODUCT_CATALOG_DGS_URL: "http://product-catalog-dgs:4005/graphql"
     ports:
       - "4000:4000"
     depends_on:
       - shipping-dgs
+      - product-catalog-dgs
   shipping-dgs:
     build:
       context: ./src/shipping-dgs
@@ -23,3 +25,15 @@ services:
       - "4004:4004"
     depends_on:
       - shipping
+  product-catalog-dgs:
+    build:
+      context: ./src/product-catalog-dgs
+      dockerfile: Dockerfile
+    container_name: product-catalog-dgs
+    environment:
+      PORT: "4005"
+      PRODUCT_CATALOG_ADDR: "product-catalog:3550"
+    ports:
+      - "4005:4005"
+    depends_on:
+      - product-catalog
