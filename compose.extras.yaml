@@ -1,4 +1,16 @@
 services:
+  graphql-gateway:
+    build:
+      context: ./src/gateway
+      dockerfile: Dockerfile
+    container_name: graphql-gateway
+    environment:
+      PORT: "4000"
+      SHIPPING_DGS_URL: "http://shipping-dgs:4004/graphql"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - shipping-dgs
   shipping-dgs:
     build:
       context: ./src/shipping-dgs
