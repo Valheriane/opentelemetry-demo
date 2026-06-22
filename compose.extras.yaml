@@ -9,12 +9,14 @@ services:
       SHIPPING_DGS_URL: "http://shipping-dgs:4004/graphql"
       PRODUCT_CATALOG_DGS_URL: "http://product-catalog-dgs:4005/graphql"
       CURRENCY_DGS_URL: "http://currency-dgs:4006/graphql"
+      CART_DGS_URL: "http://cart-dgs:4007/graphql"
     ports:
       - "4000:4000"
     depends_on:
       - shipping-dgs
       - product-catalog-dgs
       - currency-dgs
+      - cart-dgs
   shipping-dgs:
     build:
       context: ./src/shipping-dgs
@@ -51,3 +53,15 @@ services:
       - "4006:4006"
     depends_on:
       - currency
+  cart-dgs:
+    build:
+      context: ./src/cart-dgs
+      dockerfile: Dockerfile
+    container_name: cart-dgs
+    environment:
+      PORT: "4007"
+      CART_ADDR: "cart:7070"
+    ports:
+      - "4007:4007"
+    depends_on:
+      - cart

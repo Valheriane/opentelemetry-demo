@@ -1,0 +1,17 @@
+query GetCartWithProducts {
+  cart(userId: "cart-dgs-test-user") {
+    userId
+    items {
+      quantity
+      product {
+        id
+        name
+        priceUsd {
+          currencyCode
+          units
+          nanos
+        }
+      }
+    }
+  }
+}
