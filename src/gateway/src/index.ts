@@ -11,6 +11,9 @@ const SHIPPING_DGS_URL =
 const PRODUCT_CATALOG_DGS_URL =
   process.env.PRODUCT_CATALOG_DGS_URL ?? "http://product-catalog-dgs:4005/graphql";
 
+const CURRENCY_DGS_URL =
+  process.env.CURRENCY_DGS_URL ?? "http://currency-dgs:4006/graphql";
+
 const gateway = new ApolloGateway({
   supergraphSdl: new IntrospectAndCompose({
     subgraphs: [
@@ -21,6 +24,10 @@ const gateway = new ApolloGateway({
       {
         name: "productCatalog",
         url: PRODUCT_CATALOG_DGS_URL
+      },
+      {
+        name: "currency",
+        url: CURRENCY_DGS_URL
       }
     ]
   })
@@ -39,3 +46,4 @@ const { url } = await startStandaloneServer(server, {
 console.log(`GraphQL Gateway ready at ${url}`);
 console.log(`Composed subgraph: shipping -> ${SHIPPING_DGS_URL}`);
 console.log(`Composed subgraph: productCatalog -> ${PRODUCT_CATALOG_DGS_URL}`);
+console.log(`Composed subgraph: currency -> ${CURRENCY_DGS_URL}`);
