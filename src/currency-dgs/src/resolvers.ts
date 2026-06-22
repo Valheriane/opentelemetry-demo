@@ -15,6 +15,11 @@ type MoneyInput = {
   nanos: number;
 };
 
+type ProductParent = {
+  id: string;
+  priceUsd: MoneyInput;
+};
+
 function getSupportedCurrenciesGrpc(): Promise<string[]> {
   return new Promise((resolve, reject) => {
     client.getSupportedCurrencies({}, (error, response) => {
@@ -60,6 +65,20 @@ export const resolvers = {
       args: { from: MoneyInput; toCode: string }
     ) => {
       const convertedMoney = await convertCurrencyGrpc(args.from, args.toCode);
+      return mapMoney(convertedMoney);
+    }
+  },
+
+  Product: {
+    price: async (
+      parent: ProductParent,
+      args: { currencyCode: string }
+    ) => {
+      const convertedMoney = await convertCurrencyGrpc(
+        parent.priceUsd,
+        args.currencyCode
+      );
+
       return mapMoney(convertedMoney);
     }
   }

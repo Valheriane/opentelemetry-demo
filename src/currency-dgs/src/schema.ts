@@ -17,4 +17,17 @@ export const typeDefs = parse(`
     units: Int!
     nanos: Int!
   }
+
+  type ProductMoney {
+    currencyCode: String!
+    units: Int!
+    nanos: Int!
+  }
+
+  extend type Product @key(fields: "id") {
+    id: ID! @external
+    priceUsd: ProductMoney! @external
+    price(currencyCode: String!): CurrencyMoney!
+      @requires(fields: "priceUsd { currencyCode units nanos }")
+  }
 `);
