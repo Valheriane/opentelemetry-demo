@@ -1,0 +1,3 @@
+query ListSupportedCurrencies {
+  supportedCurrencies
+}
