@@ -1,0 +1,16 @@
+query GetProductWithConvertedPrice {
+  product(id: "OLJCESPC7Z") {
+    id
+    name
+    priceUsd {
+      currencyCode
+      units
+      nanos
+    }
+    price(currencyCode: "EUR") {
+      currencyCode
+      units
+      nanos
+    }
+  }
+}
