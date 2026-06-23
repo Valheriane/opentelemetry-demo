@@ -11,7 +11,7 @@ La Gateway permet d'exposer une interface GraphQL unifiée au-dessus de plusieur
 La contribution contient actuellement :
 
 - une Gateway Apollo fédérée ;
-- 4 DGS fonctionnels ;
+- 5 DGS fonctionnels ;
 - une intégration Docker Compose via `compose.extras.yaml` ;
 - des opérations GraphQL de test dans `src/gateway/operations`.
 
@@ -23,19 +23,20 @@ La contribution contient actuellement :
 | `product-catalog-dgs` | 4005 | `product-catalog:3550` | gRPC | Fonctionnel |
 | `currency-dgs` | 4006 | `currency:7001` | gRPC | Fonctionnel |
 | `cart-dgs` | 4007 | `cart:7070` | gRPC | Fonctionnel |
+| `recommendation-dgs` | 4008 | `recommendation:9001` | gRPC | Fonctionnel |
 | `graphql-gateway` | 4000 | DGS GraphQL | GraphQL Federation | Fonctionnel |
 
 ## Points importants
 
 La Gateway expose un schéma GraphQL unique composé à partir des différents DGS.
 
-Deux cas de fédération entre DGS sont actuellement démontrés :
+Trois cas de fédération entre DGS sont actuellement démontrés :
 
-1. `cart-dgs` expose les items du panier avec des références produit.
-2. `product-catalog-dgs` résout les détails des produits.
-3. `currency-dgs` étend le type `Product` pour exposer un prix converti via `price(currencyCode: String!)`.
+1. `cart-dgs` expose les items du panier avec des références produit, et `product-catalog-dgs` résout les détails des produits.
+2. `currency-dgs` étend le type `Product` pour exposer un prix converti via `price(currencyCode: String!)`.
+3. `recommendation-dgs` retourne des références produit, puis `product-catalog-dgs` et `currency-dgs` enrichissent la réponse finale.
 
-Cela permet par exemple de demander un panier avec les détails produits, ou un produit avec son prix USD et son prix converti.
+Cela permet par exemple de demander un panier avec ses produits, un produit avec son prix converti, ou des recommandations avec les détails produits et les prix convertis.
 
 ## Lancement local
 
@@ -47,6 +48,7 @@ docker compose -f compose.yaml -f compose.extras.yaml up -d --build \
   product-catalog-dgs \
   currency-dgs \
   cart-dgs \
+  recommendation-dgs \
   graphql-gateway
 ````
 
@@ -63,6 +65,7 @@ curl http://localhost:4004/health
 curl http://localhost:4005/health
 curl http://localhost:4006/health
 curl http://localhost:4007/health
+curl http://localhost:4008/health
 ```
 
 ## Opérations GraphQL de test

@@ -141,3 +141,83 @@ cart(userId: "cart-dgs-test-user") {
 }
 ```
 
+## 5. Recommendation DGS
+
+Dossier :
+
+```text
+src/recommendation-dgs
+```
+
+Backend appelé :
+
+```text
+recommendation:9001
+```
+
+Protocole backend :
+
+```text
+gRPC
+```
+
+Opérations exposées :
+
+```graphql
+recommendedProductIds(
+  userId: String!
+  productIds: [ID!]!
+  limit: Int = 4
+): [ID!]!
+
+recommendedProducts(
+  userId: String!
+  productIds: [ID!]!
+  limit: Int = 4
+): [Product!]!
+```
+
+Référence fédérée :
+
+```graphql
+type Product @key(fields: "id", resolvable: false) {
+  id: ID!
+}
+```
+
+Rôle :
+
+* appeler le service gRPC `RecommendationService.ListRecommendations` ;
+* récupérer une liste d'identifiants de produits recommandés ;
+* exposer soit les identifiants seuls, soit des références fédérées vers `Product` ;
+* laisser `product-catalog-dgs` résoudre les détails produits ;
+* permettre à `currency-dgs` d'ajouter un prix converti via `price(currencyCode)`.
+
+Exemple de fédération :
+
+```graphql
+recommendedProducts(
+  userId: "recommendation-dgs-test-user"
+  productIds: ["OLJCESPC7Z"]
+  limit: 4
+) {
+  id
+  name
+  priceUsd {
+    currencyCode
+    units
+    nanos
+  }
+  price(currencyCode: "EUR") {
+    currencyCode
+    units
+    nanos
+  }
+}
+```
+
+Cette opération démontre une fédération en chaîne :
+
+```text
+recommendation-dgs -> product-catalog-dgs -> currency-dgs
+```
