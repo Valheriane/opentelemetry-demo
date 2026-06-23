@@ -268,7 +268,6 @@ On ne commence pas par :
 
 ```text
 checkout
-recommendation
 product-reviews
 ad
 observabilité de la gateway
@@ -303,6 +302,7 @@ Donc pour chaque fonctionnalité, tu remplis une ligne :
 | Vider panier    | `pages/api/cart.ts`                       | `Cart.gateway.ts`           | gRPC Cart           | `emptyCart`              |
 | Devises         | `pages/api/currency.ts`                   | `Currency.gateway.ts`       | gRPC Currency       | `supportedCurrencies`    |
 | Livraison       | `pages/api/shipping.ts`                   | `Shipping.gateway.ts`       | HTTP Shipping       | `shippingQuote`          |
+| Recommandations produits | `pages/api/recommendations.ts` | `Recommendations.gateway.ts` | gRPC Recommendation | `recommendedProductIds`, `recommendedProducts` |
 
 Rien que ça, tu as déjà une base solide.
 
