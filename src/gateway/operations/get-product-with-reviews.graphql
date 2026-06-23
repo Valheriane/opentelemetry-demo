@@ -1,0 +1,12 @@
+query GetProductWithReviews {
+  product(id: "OLJCESPC7Z") {
+    id
+    name
+    reviews {
+      username
+      description
+      score
+    }
+    averageReviewScore
+  }
+}

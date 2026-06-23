@@ -1,0 +1,7 @@
+query GetProductReviews {
+  productReviews(productId: "OLJCESPC7Z") {
+    username
+    description
+    score
+  }
+}

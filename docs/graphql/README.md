@@ -11,7 +11,7 @@ La Gateway permet d'exposer une interface GraphQL unifiée au-dessus de plusieur
 La contribution contient actuellement :
 
 - une Gateway Apollo fédérée ;
-- 5 DGS fonctionnels ;
+- 6 DGS fonctionnels ;
 - une intégration Docker Compose via `compose.extras.yaml` ;
 - des opérations GraphQL de test dans `src/gateway/operations`.
 
@@ -24,6 +24,7 @@ La contribution contient actuellement :
 | `currency-dgs` | 4006 | `currency:7001` | gRPC | Fonctionnel |
 | `cart-dgs` | 4007 | `cart:7070` | gRPC | Fonctionnel |
 | `recommendation-dgs` | 4008 | `recommendation:9001` | gRPC | Fonctionnel |
+| `product-reviews-dgs` | 4009 | `product-reviews:3551` | gRPC | Fonctionnel |
 | `graphql-gateway` | 4000 | DGS GraphQL | GraphQL Federation | Fonctionnel |
 
 ## Points importants
@@ -66,6 +67,7 @@ curl http://localhost:4005/health
 curl http://localhost:4006/health
 curl http://localhost:4007/health
 curl http://localhost:4008/health
+curl http://localhost:4009/health
 ```
 
 ## Opérations GraphQL de test
