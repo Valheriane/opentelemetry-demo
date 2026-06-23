@@ -17,6 +17,9 @@ const CURRENCY_DGS_URL =
 const CART_DGS_URL =
   process.env.CART_DGS_URL ?? "http://cart-dgs:4007/graphql";
 
+const RECOMMENDATION_DGS_URL =
+  process.env.RECOMMENDATION_DGS_URL ?? "http://recommendation-dgs:4008/graphql";
+
 const gateway = new ApolloGateway({
   supergraphSdl: new IntrospectAndCompose({
     subgraphs: [
@@ -35,6 +38,10 @@ const gateway = new ApolloGateway({
       {
         name: "cart",
         url: CART_DGS_URL
+      },
+      {
+        name: "recommendation",
+        url: RECOMMENDATION_DGS_URL
       }
     ]
   })
@@ -43,6 +50,7 @@ const gateway = new ApolloGateway({
 const server = new ApolloServer({
   gateway
 });
+
 
 const { url } = await startStandaloneServer(server, {
   listen: {
@@ -55,3 +63,4 @@ console.log(`Composed subgraph: shipping -> ${SHIPPING_DGS_URL}`);
 console.log(`Composed subgraph: productCatalog -> ${PRODUCT_CATALOG_DGS_URL}`);
 console.log(`Composed subgraph: currency -> ${CURRENCY_DGS_URL}`);
 console.log(`Composed subgraph: cart -> ${CART_DGS_URL}`);
+console.log(`Composed subgraph: recommendation -> ${RECOMMENDATION_DGS_URL}`);
