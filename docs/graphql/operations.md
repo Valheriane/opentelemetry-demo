@@ -103,3 +103,42 @@ Cette opération démontre que :
 * `currency-dgs` étend le type `Product` ;
 * la Gateway assemble la réponse finale.
 
+
+## Product Reviews
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/get-product-reviews.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+`````
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/get-average-product-review-score.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/ask-product-ai-assistant.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/get-product-with-reviews.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/get-product-with-reviews-and-ai.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+Ces opérations valident les trois appels gRPC du service `ProductReviewService` et la fédération autour du type `Product`.

@@ -11,6 +11,7 @@ services:
       CURRENCY_DGS_URL: "http://currency-dgs:4006/graphql"
       CART_DGS_URL: "http://cart-dgs:4007/graphql"
       RECOMMENDATION_DGS_URL: "http://recommendation-dgs:4008/graphql"
+      PRODUCT_REVIEWS_DGS_URL: "http://product-reviews-dgs:4009/graphql"
     ports:
       - "4000:4000"
     depends_on:
@@ -19,6 +20,8 @@ services:
       - currency-dgs
       - cart-dgs
       - recommendation-dgs
+      - product-reviews-dgs
+
   shipping-dgs:
     build:
       context: ./src/shipping-dgs
@@ -79,4 +82,17 @@ services:
       - "4008:4008"
     depends_on:
       recommendation:
+        condition: service_started
+  product-reviews-dgs:
+    build:
+      context: .
+      dockerfile: src/product-reviews-dgs/Dockerfile
+    container_name: product-reviews-dgs
+    environment:
+      - PORT=4009
+      - PRODUCT_REVIEWS_ADDR=product-reviews:3551
+    ports:
+      - "4009:4009"
+    depends_on:
+      product-reviews:
         condition: service_started

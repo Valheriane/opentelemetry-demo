@@ -1,0 +1,23 @@
+query GetProductWithReviewsAndAi {
+  product(id: "OLJCESPC7Z") {
+    id
+    name
+    priceUsd {
+      currencyCode
+      units
+      nanos
+    }
+    price(currencyCode: "EUR") {
+      currencyCode
+      units
+      nanos
+    }
+    reviews {
+      username
+      description
+      score
+    }
+    averageReviewScore
+    askAiAssistant(question: "Is this product useful for beginners?")
+  }
+}

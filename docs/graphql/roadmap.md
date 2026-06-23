@@ -3,12 +3,14 @@
 ## Réalisé
 
 - Création d'une Gateway Apollo fédérée.
-- Création de 5 DGS :
+- Création de 6 DGS :
   - `shipping-dgs`
   - `product-catalog-dgs`
   - `currency-dgs`
   - `cart-dgs`
   - `recommendation-dgs`
+  - `product-reviews-dgs`
+
 - Intégration Docker Compose via `compose.extras.yaml`.
 - Ajout d'opérations GraphQL de test.
 - Validation de plusieurs flux via `localhost:4000`.
@@ -25,11 +27,10 @@ DGS possibles à ajouter :
 
 - `checkout-dgs`
 - `ad-dgs`
-- `product-reviews-dgs`
 
 ## Prochaine étape recommandée
 
-Le prochain DGS à étudier pourrait être `checkout-dgs`, car il correspond à un flux métier central du site e-commerce. Il devra toutefois être abordé avec prudence, car il peut impliquer plusieurs domaines : panier, livraison, paiement, confirmation de commande et email.
+Le prochain DGS à étudier peut être `ad-dgs`, plus simple, ou `checkout-dgs`, plus complet mais plus risqué car il touche au flux de commande.
 
 ## Améliorations possibles
 
