@@ -26,6 +26,9 @@ const PRODUCT_REVIEWS_DGS_URL =
 const AD_DGS_URL =
   process.env.AD_DGS_URL ?? "http://ad-dgs:4010/graphql";
 
+const CHECKOUT_DGS_URL =
+  process.env.CHECKOUT_DGS_URL ?? "http://checkout-dgs:4011/graphql";
+
 const gateway = new ApolloGateway({
   supergraphSdl: new IntrospectAndCompose({
     subgraphs: [
@@ -56,6 +59,10 @@ const gateway = new ApolloGateway({
       {
         name: "ad",
         url: AD_DGS_URL
+      },
+      {
+        name: "checkout",
+        url: CHECKOUT_DGS_URL
       }
     ]
   })
@@ -80,7 +87,7 @@ console.log(`Composed subgraph: cart -> ${CART_DGS_URL}`);
 console.log(`Composed subgraph: recommendation -> ${RECOMMENDATION_DGS_URL}`);
 console.log(`Composed subgraph: productReviews -> ${PRODUCT_REVIEWS_DGS_URL}`);
 console.log(`Composed subgraph: ad -> ${AD_DGS_URL}`);
-
+console.log(`Composed subgraph: checkout -> ${CHECKOUT_DGS_URL}`);
 
 
 

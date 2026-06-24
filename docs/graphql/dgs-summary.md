@@ -440,3 +440,104 @@ query GetAds {
 Cette opération permet de tester le service `ad` via `ad-dgs`.
 
 Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
+
+## 8. Checkout DGS
+
+Dossier :
+
+```text
+src/checkout-dgs
+```
+
+Backend appelé :
+
+```text
+checkout:5050
+```
+
+Protocole backend :
+
+```text
+gRPC
+```
+
+Opération exposée :
+
+```graphql
+placeOrder(input: PlaceOrderInput!): CheckoutOrder!
+```
+
+Rôle :
+
+* exposer le flux de commande via une mutation GraphQL ;
+* appeler le service gRPC `CheckoutService.PlaceOrder` ;
+* transmettre l'utilisateur, la devise, l'adresse, l'email et les informations de paiement ;
+* récupérer le résultat de commande ;
+* retourner les frais de livraison, l'adresse, les items commandés et les références produits ;
+* permettre à `product-catalog-dgs` de résoudre les détails des produits via la fédération.
+
+Exemple de fédération validée :
+
+```graphql
+mutation PlaceOrder {
+  placeOrder(input: {
+    userId: "checkout-dgs-test-user"
+    userCurrency: "EUR"
+    address: {
+      streetAddress: "1600 Amphitheatre Parkway"
+      city: "Mountain View"
+      state: "CA"
+      country: "United States"
+      zipCode: "94043"
+    }
+    email: "checkout-dgs-test@example.com"
+    creditCard: {
+      creditCardNumber: "4111111111111111"
+      creditCardCvv: 123
+      creditCardExpirationYear: 2030
+      creditCardExpirationMonth: 12
+    }
+  }) {
+    orderId
+    shippingTrackingId
+    shippingCost {
+      currencyCode
+      units
+      nanos
+    }
+    shippingAddress {
+      streetAddress
+      city
+      state
+      country
+      zipCode
+    }
+    items {
+      item {
+        productId
+        quantity
+        product {
+          id
+          name
+          priceUsd {
+            currencyCode
+            units
+            nanos
+          }
+        }
+      }
+      cost {
+        currencyCode
+        units
+        nanos
+      }
+    }
+  }
+}
+```
+
+Cette opération démontre une fédération entre :
+
+```text
+cart-dgs -> checkout-dgs -> checkout -> product-catalog-dgs
+```
