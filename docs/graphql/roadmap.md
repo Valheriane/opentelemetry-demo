@@ -10,6 +10,7 @@
   - `cart-dgs`
   - `recommendation-dgs`
   - `product-reviews-dgs`
+  - `ad-dgs`
 
 - Intégration Docker Compose via `compose.extras.yaml`.
 - Ajout d'opérations GraphQL de test.
@@ -26,11 +27,11 @@ Objectif idéal : couvrir progressivement les autres services backend utilisés 
 DGS possibles à ajouter :
 
 - `checkout-dgs`
-- `ad-dgs`
+
 
 ## Prochaine étape recommandée
 
-Le prochain DGS à étudier peut être `ad-dgs`, plus simple, ou `checkout-dgs`, plus complet mais plus risqué car il touche au flux de commande.
+Le dernier DGS principal à étudier est `checkout-dgs`. Il devra être traité avec prudence, car il touche au flux métier complet de commande : panier, adresse, paiement, livraison et confirmation.
 
 ## Améliorations possibles
 

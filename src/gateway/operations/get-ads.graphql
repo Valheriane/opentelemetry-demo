@@ -1,0 +1,6 @@
+query GetAds {
+  ads(contextKeys: []) {
+    redirectUrl
+    text
+  }
+}

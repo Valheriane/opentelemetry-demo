@@ -303,6 +303,7 @@ Donc pour chaque fonctionnalité, tu remplis une ligne :
 | Devises         | `pages/api/currency.ts`                   | `Currency.gateway.ts`       | gRPC Currency       | `supportedCurrencies`    |
 | Livraison       | `pages/api/shipping.ts`                   | `Shipping.gateway.ts`       | HTTP Shipping       | `shippingQuote`          |
 | Recommandations produits | `pages/api/recommendations.ts` | `Recommendations.gateway.ts` | gRPC Recommendation | `recommendedProductIds`, `recommendedProducts` |
+| Publicités contextuelles | `pages/api/data.ts` | `Ad.gateway.ts` | gRPC Ad | `ads(contextKeys)` |
 
 Rien que ça, tu as déjà une base solide.
 

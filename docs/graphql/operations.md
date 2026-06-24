@@ -142,3 +142,17 @@ jq -Rs '{query: .}' src/gateway/operations/get-product-with-reviews-and-ai.graph
 ```
 
 Ces opérations valident les trois appels gRPC du service `ProductReviewService` et la fédération autour du type `Product`.
+
+## Ad
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/get-ads.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+Cette opération valide l'appel au service `ad` via `ad-dgs`.
+
+Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
+

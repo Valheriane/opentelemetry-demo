@@ -384,7 +384,59 @@ Cette opération démontre une fédération entre :
 product-catalog-dgs -> currency-dgs -> product-reviews-dgs
 ```
 
+## 7. Ad DGS
 
+Dossier :
 
+```text
+src/ad-dgs
+```
 
+Backend appelé :
 
+```text
+ad:9555
+```
+
+Protocole backend :
+
+```text
+gRPC
+```
+
+Opération exposée :
+
+```graphql
+ads(contextKeys: [String!]!): [Ad!]!
+```
+
+Type exposé :
+
+```graphql
+type Ad {
+  redirectUrl: String!
+  text: String!
+}
+```
+
+Rôle :
+
+* appeler le service gRPC `AdService.GetAds` ;
+* récupérer des publicités selon une liste de clés de contexte ;
+* exposer les publicités via la Gateway GraphQL ;
+* retourner une URL de redirection et un texte publicitaire.
+
+Exemple :
+
+```graphql
+query GetAds {
+  ads(contextKeys: []) {
+    redirectUrl
+    text
+  }
+}
+```
+
+Cette opération permet de tester le service `ad` via `ad-dgs`.
+
+Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
