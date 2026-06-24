@@ -1,0 +1,57 @@
+mutation PlaceOrder {
+  placeOrder(
+    input: {
+      userId: "checkout-dgs-test-user"
+      userCurrency: "EUR"
+      address: {
+        streetAddress: "1600 Amphitheatre Parkway"
+        city: "Mountain View"
+        state: "CA"
+        country: "United States"
+        zipCode: "94043"
+      }
+      email: "checkout-dgs-test@example.com"
+      creditCard: {
+        creditCardNumber: "4111111111111111"
+        creditCardCvv: 123
+        creditCardExpirationYear: 2030
+        creditCardExpirationMonth: 12
+      }
+    }
+  ) {
+    orderId
+    shippingTrackingId
+    shippingCost {
+      currencyCode
+      units
+      nanos
+    }
+    shippingAddress {
+      streetAddress
+      city
+      state
+      country
+      zipCode
+    }
+    items {
+      item {
+        productId
+        quantity
+        product {
+          id
+          name
+          priceUsd {
+            currencyCode
+            units
+            nanos
+          }
+        }
+      }
+      cost {
+        currencyCode
+        units
+        nanos
+      }
+    }
+  }
+}

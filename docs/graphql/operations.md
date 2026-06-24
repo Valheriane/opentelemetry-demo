@@ -156,3 +156,28 @@ Cette opération valide l'appel au service `ad` via `ad-dgs`.
 
 Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
 
+## Checkout
+
+Avant de passer une commande, il faut préparer un panier pour le même utilisateur.
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/prepare-checkout-cart.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+Puis lancer la mutation de commande :
+
+```bash
+jq -Rs '{query: .}' src/gateway/operations/place-order.graphql \
+  | curl -s http://localhost:4000/ \
+      -H "content-type: application/json" \
+      --data-binary @- | jq
+```
+
+Cette opération valide le flux fédéré :
+
+```text
+cart-dgs -> checkout-dgs -> checkout -> product-catalog-dgs
+```

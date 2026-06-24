@@ -13,6 +13,7 @@ services:
       RECOMMENDATION_DGS_URL: "http://recommendation-dgs:4008/graphql"
       PRODUCT_REVIEWS_DGS_URL: "http://product-reviews-dgs:4009/graphql"
       AD_DGS_URL: "http://ad-dgs:4010/graphql"
+      CHECKOUT_DGS_URL: "http://checkout-dgs:4011/graphql"
     ports:
       - "4000:4000"
     depends_on:
@@ -23,6 +24,7 @@ services:
       - recommendation-dgs
       - product-reviews-dgs
       - ad-dgs
+      - checkout-dgs
 
   shipping-dgs:
     build:
@@ -110,4 +112,17 @@ services:
       - "4010:4010"
     depends_on:
       ad:
+        condition: service_started
+  checkout-dgs:
+    build:
+      context: .
+      dockerfile: src/checkout-dgs/Dockerfile
+    container_name: checkout-dgs
+    environment:
+      - PORT=4011
+      - CHECKOUT_ADDR=checkout:5050
+    ports:
+      - "4011:4011"
+    depends_on:
+      checkout:
         condition: service_started
