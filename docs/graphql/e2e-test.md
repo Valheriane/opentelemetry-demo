@@ -99,3 +99,11 @@ Un script de test permet de valider un parcours utilisateur complet via la Gatew
 
 ```bash
 ./scripts/test-gateway-e2e.sh
+```
+
+## Lancement via Makefile
+
+Le scénario complet peut être lancé avec :
+
+```bash
+make demo-graphql
