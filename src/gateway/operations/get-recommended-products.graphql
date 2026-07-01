@@ -1,0 +1,20 @@
+query GetRecommendedProducts {
+  recommendedProducts(
+    userId: "recommendation-dgs-test-user"
+    productIds: ["OLJCESPC7Z"]
+    limit: 4
+  ) {
+    id
+    name
+    priceUsd {
+      currencyCode
+      units
+      nanos
+    }
+    price(currencyCode: "EUR") {
+      currencyCode
+      units
+      nanos
+    }
+  }
+}

@@ -1,0 +1,13 @@
+mutation PrepareCheckoutCart {
+  addCartItem(
+    userId: "checkout-dgs-test-user"
+    productId: "OLJCESPC7Z"
+    quantity: 1
+  ) {
+    userId
+    items {
+      productId
+      quantity
+    }
+  }
+}

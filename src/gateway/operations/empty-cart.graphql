@@ -1,0 +1,9 @@
+mutation EmptyCart {
+  emptyCart(userId: "cart-dgs-test-user") {
+    userId
+    items {
+      productId
+      quantity
+    }
+  }
+}

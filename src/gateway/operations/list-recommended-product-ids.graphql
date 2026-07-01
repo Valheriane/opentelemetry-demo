@@ -1,0 +1,7 @@
+query ListRecommendedProductIds {
+  recommendedProductIds(
+    userId: "recommendation-dgs-test-user"
+    productIds: ["OLJCESPC7Z"]
+    limit: 4
+  )
+}

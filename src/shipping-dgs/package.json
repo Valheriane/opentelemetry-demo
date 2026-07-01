@@ -1,0 +1,22 @@
+{
+  "name": "shipping-dgs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@apollo/subgraph": "^2",
+    "graphql": "^16",
+    "graphql-tag": "^2",
+    "graphql-yoga": "^5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}

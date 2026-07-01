@@ -1,0 +1,6 @@
+query AskProductAiAssistant {
+  askProductAiAssistant(
+    productId: "OLJCESPC7Z"
+    question: "Is this product useful for beginners?"
+  )
+}

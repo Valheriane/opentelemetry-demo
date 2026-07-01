@@ -1,0 +1,16 @@
+query ListProducts {
+  products {
+    id
+    name
+    description
+    picture
+    categories
+    priceUsd {
+      currencyCode
+      units
+      nanos
+    }
+  }
+}
+
+

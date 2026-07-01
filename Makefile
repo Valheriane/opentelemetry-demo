@@ -318,3 +318,44 @@ endif
 .PHONY: build-react-native-android
 build-react-native-android:
 	$(DOCKER_CMD) build -f src/react-native-app/android.Dockerfile --platform=linux/amd64 --output=. src/react-native-app
+
+# Wait for GraphQL Gateway to be ready before running tests
+# This is necessary because the GraphQL Gateway may take a few seconds to start up and be ready to accept requests.
+# The wait-graphql-gateway target will wait for up to 5 minutes (60 * 5 seconds) for the GraphQL Gateway to be ready.
+
+
+.PHONY: start-graphql
+start-graphql:
+	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) $(DOCKER_COMPOSE_FILES_FULL) $(DOCKER_COMPOSE_FILES_EXTRAS) up --force-recreate --remove-orphans --detach
+	@echo ""
+	@echo "OpenTelemetry Demo + GraphQL Gateway are running."
+	@echo "Frontend: http://localhost:8080"
+	@echo "GraphQL Gateway: http://localhost:4000/"
+
+.PHONY: wait-graphql-gateway
+wait-graphql-gateway:
+	@echo "Waiting for GraphQL Gateway on http://localhost:4000/ ..."
+	@for i in $$(seq 1 60); do \
+		if curl -s http://localhost:4000/ \
+			-H "content-type: application/json" \
+			--data-binary '{"query":"{ __typename }"}' \
+			| jq -e '.data.__typename == "Query"' > /dev/null 2>&1; then \
+			echo "GraphQL Gateway is ready."; \
+			exit 0; \
+		fi; \
+		echo "GraphQL Gateway not ready yet... ($$i/60)"; \
+		sleep 5; \
+	done; \
+	echo "GraphQL Gateway did not become ready in time."; \
+	exit 1
+
+.PHONY: test-graphql-gateway
+test-graphql-gateway:
+	./scripts/test-gateway-e2e.sh
+
+.PHONY: demo-graphql
+demo-graphql: start-graphql wait-graphql-gateway test-graphql-gateway
+	@echo ""
+	@echo "GraphQL demo flow completed successfully."
+
+

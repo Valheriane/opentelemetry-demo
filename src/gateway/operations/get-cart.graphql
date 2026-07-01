@@ -1,0 +1,9 @@
+query GetCart {
+  cart(userId: "cart-dgs-test-user") {
+    userId
+    items {
+      productId
+      quantity
+    }
+  }
+}
