@@ -11,6 +11,7 @@
   - `recommendation-dgs`
   - `product-reviews-dgs`
   - `ad-dgs`
+  - `checkout-dgs`
 
 - Intégration Docker Compose via `compose.extras.yaml`.
 - Ajout d'opérations GraphQL de test.
@@ -24,9 +25,12 @@
 
 Objectif idéal : couvrir progressivement les autres services backend utilisés par le frontend.
 
-DGS possibles à ajouter :
+Ajout possibles à ajouter :
+  - traduction anglaise de la documentation ;
+  - stabilisation éventuelle du frontend ;
+  - observabilité optionnelle ;
+  - amélioration des tests automatisés.
 
-- `checkout-dgs`
 
 
 ## Prochaine étape recommandée
