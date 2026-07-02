@@ -108,3 +108,20 @@ The complete scenario can be launched with:
 ```bash
 make demo-graphql
 ```
+
+## Full Demo With Frontend
+
+A complete demo command is also available:
+
+```bash
+make demo-full-graphql
+```
+
+This command starts the full OpenTelemetry Demo stack with the GraphQL Gateway, waits for the frontend, waits for the GraphQL Gateway, and then runs the GraphQL end-to-end test.
+
+It validates both access points:
+
+```text
+Frontend UI: http://localhost:8080
+GraphQL Gateway: http://localhost:4000/
+```
