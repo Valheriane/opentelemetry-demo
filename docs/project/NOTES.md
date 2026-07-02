@@ -1,11 +1,11 @@
-# Projet dev - OpenTelemetry Astronomy Shop GraphQL Gateway
+# Development Project - OpenTelemetry Astronomy Shop GraphQL Gateway
 
-## Objectif
+## Objective
 
-Ré-architecturer une partie de l'application OpenTelemetry Astronomy Shop en ajoutant une Gateway GraphQL fédérée.
+Re-architect part of the OpenTelemetry Astronomy Shop application by introducing a federated GraphQL Gateway.
 
-## Organisation Git
+## Git Workflow
 
-- main : branche stable
-- dev : branche d'intégration
-- feature/* : branches de travail
+- `main`: stable branch
+- `dev`: integration branch
+- `feature/*`: feature branches used for development work

@@ -1,82 +1,82 @@
 # DGS Summary
 
-Ce document résume les DGS ajoutés dans le cadre de la couche GraphQL fédérée.
+This document summarizes the DGS added as part of the federated GraphQL layer.
 
 ## 1. Shipping DGS
 
-Dossier :
+Directory:
 
 ```text
 src/shipping-dgs
-````
+```
 
-Backend appelé :
+Backend called:
 
 ```text
 http://shipping:50050
 ```
 
-Opération exposée :
+Exposed operation:
 
 ```graphql
 shippingQuoteUsd(address: AddressInput!, items: [CartItemInput!]!): Money!
 ```
 
-Rôle :
+Role:
 
-* calculer un devis de livraison ;
-* convertir les inputs GraphQL en payload HTTP attendu par le service Shipping ;
-* retourner un type GraphQL `Money`.
+- calculate a shipping quote;
+- convert GraphQL inputs into the HTTP payload expected by the Shipping service;
+- return a GraphQL `Money` type.
 
 ## 2. Product Catalog DGS
 
-Dossier :
+Directory:
 
 ```text
 src/product-catalog-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 product-catalog:3550
 ```
 
-Opérations exposées :
+Exposed operations:
 
 ```graphql
 products: [Product!]!
 product(id: ID!): Product!
 ```
 
-Rôle :
+Role:
 
-* récupérer la liste des produits ;
-* récupérer un produit par identifiant ;
-* exposer le type fédéré `Product`.
+- retrieve the product list;
+- retrieve a product by identifier;
+- expose the federated `Product` type.
 
 ## 3. Currency DGS
 
-Dossier :
+Directory:
 
 ```text
 src/currency-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 currency:7001
 ```
 
-Opérations exposées :
+Exposed operations:
 
 ```graphql
 supportedCurrencies: [String!]!
 convertCurrency(from: MoneyInput!, toCode: String!): CurrencyMoney!
 ```
 
-Extension fédérée :
+Federated extension:
 
 ```graphql
 extend type Product @key(fields: "id") {
@@ -87,27 +87,27 @@ extend type Product @key(fields: "id") {
 }
 ```
 
-Rôle :
+Role:
 
-* exposer les devises supportées ;
-* convertir une valeur monétaire ;
-* enrichir le type `Product` avec un champ `price(currencyCode)`.
+- expose the supported currencies;
+- convert a monetary value;
+- enrich the `Product` type with a `price(currencyCode)` field.
 
 ## 4. Cart DGS
 
-Dossier :
+Directory:
 
 ```text
 src/cart-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 cart:7070
 ```
 
-Opérations exposées :
+Exposed operations:
 
 ```graphql
 cart(userId: String!): Cart!
@@ -115,14 +115,14 @@ addCartItem(userId: String!, productId: ID!, quantity: Int!): Cart!
 emptyCart(userId: String!): Cart!
 ```
 
-Rôle :
+Role:
 
-* récupérer un panier utilisateur ;
-* ajouter un produit au panier ;
-* vider un panier ;
-* exposer une référence fédérée vers `Product`.
+- retrieve a user cart;
+- add a product to the cart;
+- empty a cart;
+- expose a federated reference to `Product`.
 
-Exemple de fédération :
+Federation example:
 
 ```graphql
 cart(userId: "cart-dgs-test-user") {
@@ -143,25 +143,25 @@ cart(userId: "cart-dgs-test-user") {
 
 ## 5. Recommendation DGS
 
-Dossier :
+Directory:
 
 ```text
 src/recommendation-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 recommendation:9001
 ```
 
-Protocole backend :
+Backend protocol:
 
 ```text
 gRPC
 ```
 
-Opérations exposées :
+Exposed operations:
 
 ```graphql
 recommendedProductIds(
@@ -177,7 +177,7 @@ recommendedProducts(
 ): [Product!]!
 ```
 
-Référence fédérée :
+Federated reference:
 
 ```graphql
 type Product @key(fields: "id", resolvable: false) {
@@ -185,15 +185,15 @@ type Product @key(fields: "id", resolvable: false) {
 }
 ```
 
-Rôle :
+Role:
 
-* appeler le service gRPC `RecommendationService.ListRecommendations` ;
-* récupérer une liste d'identifiants de produits recommandés ;
-* exposer soit les identifiants seuls, soit des références fédérées vers `Product` ;
-* laisser `product-catalog-dgs` résoudre les détails produits ;
-* permettre à `currency-dgs` d'ajouter un prix converti via `price(currencyCode)`.
+- call the gRPC `RecommendationService.ListRecommendations` service;
+- retrieve a list of recommended product identifiers;
+- expose either product identifiers only or federated references to `Product`;
+- let `product-catalog-dgs` resolve the product details;
+- allow `currency-dgs` to add a converted price through `price(currencyCode)`.
 
-Exemple de fédération :
+Federation example:
 
 ```graphql
 recommendedProducts(
@@ -216,117 +216,33 @@ recommendedProducts(
 }
 ```
 
-Cette opération démontre une fédération en chaîne :
+This operation demonstrates a chained federation flow:
 
 ```text
 recommendation-dgs -> product-catalog-dgs -> currency-dgs
-
-
-Oui : **mets à jour la documentation avant de merger dans `dev`**.
-
-Comme ça, ta branche `feature/product-reviews-dgs` contient un bloc complet :
-
-```text
-code du DGS
-+ intégration compose/gateway
-+ fichiers .graphql de test
-+ documentation à jour
 ```
-
-C’est plus propre que de merger le code puis faire une deuxième branche docs juste après. En plus, tes docs actuelles parlent encore de 4 DGS dans le README et la roadmap, alors qu’on est maintenant à 6 avec `recommendation-dgs` et `product-reviews-dgs`.  
-
-## Ordre conseillé
-
-```text
-1. rester sur feature/product-reviews-dgs
-2. mettre à jour docs/graphql
-3. git add code + docs
-4. commit
-5. push de la branche
-6. merge dans dev
-7. push dev
-```
-
-## 1. Vérifier l’état actuel
-
-```bash
-git status
-git branch --show-current
-```
-
-Tu dois être sur :
-
-```text
-feature/product-reviews-dgs
-```
-
-## 2. Mettre à jour les docs
-
-À modifier :
-
-```text
-docs/graphql/README.md
-docs/graphql/dgs-summary.md
-docs/graphql/operations.md
-docs/graphql/roadmap.md
-docs/graphql/frontend-operations-map.md
-```
-
-Dans `README.md`, passe de :
-
-```text
-4 DGS fonctionnels
-```
-
-à :
-
-```text
-6 DGS fonctionnels
-```
-
-Et ajoute dans le tableau :
-
-```markdown
-| `recommendation-dgs` | 4008 | `recommendation:9001` | gRPC | Fonctionnel |
-| `product-reviews-dgs` | 4009 | `product-reviews:3551` | gRPC | Fonctionnel |
-```
-
-Dans la commande de lancement, ajoute :
-
-```bash
-  recommendation-dgs \
-  product-reviews-dgs \
-```
-
-Dans les health checks, ajoute :
-
-```bash
-curl http://localhost:4008/health
-curl http://localhost:4009/health
-```
-
 
 ## 6. Product Reviews DGS
 
-Dossier :
+Directory:
 
 ```text
 src/product-reviews-dgs
-````
+```
 
-Backend appelé :
+Backend called:
 
 ```text
 product-reviews:3551
 ```
 
-Protocole backend :
+Backend protocol:
 
 ```text
 gRPC
 ```
 
-Opérations exposées :
+Exposed operations:
 
 ```graphql
 productReviews(productId: ID!): [ProductReview!]!
@@ -334,7 +250,7 @@ averageProductReviewScore(productId: ID!): String!
 askProductAiAssistant(productId: ID!, question: String!): String!
 ```
 
-Extension fédérée :
+Federated extension:
 
 ```graphql
 extend type Product @key(fields: "id") {
@@ -345,14 +261,14 @@ extend type Product @key(fields: "id") {
 }
 ```
 
-Rôle :
+Role:
 
-* récupérer les avis d'un produit ;
-* récupérer la note moyenne d'un produit ;
-* interroger l'assistant IA lié à un produit ;
-* enrichir le type fédéré `Product` avec les avis, la note moyenne et l'assistant produit.
+- retrieve the reviews of a product;
+- retrieve the average review score of a product;
+- query the AI assistant linked to a product;
+- enrich the federated `Product` type with reviews, the average score and the product assistant.
 
-Exemple de fédération :
+Federation example:
 
 ```graphql
 product(id: "OLJCESPC7Z") {
@@ -378,7 +294,7 @@ product(id: "OLJCESPC7Z") {
 }
 ```
 
-Cette opération démontre une fédération entre :
+This operation demonstrates federation between:
 
 ```text
 product-catalog-dgs -> currency-dgs -> product-reviews-dgs
@@ -386,31 +302,31 @@ product-catalog-dgs -> currency-dgs -> product-reviews-dgs
 
 ## 7. Ad DGS
 
-Dossier :
+Directory:
 
 ```text
 src/ad-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 ad:9555
 ```
 
-Protocole backend :
+Backend protocol:
 
 ```text
 gRPC
 ```
 
-Opération exposée :
+Exposed operation:
 
 ```graphql
 ads(contextKeys: [String!]!): [Ad!]!
 ```
 
-Type exposé :
+Exposed type:
 
 ```graphql
 type Ad {
@@ -419,14 +335,14 @@ type Ad {
 }
 ```
 
-Rôle :
+Role:
 
-* appeler le service gRPC `AdService.GetAds` ;
-* récupérer des publicités selon une liste de clés de contexte ;
-* exposer les publicités via la Gateway GraphQL ;
-* retourner une URL de redirection et un texte publicitaire.
+- call the gRPC `AdService.GetAds` service;
+- retrieve advertisements based on a list of context keys;
+- expose advertisements through the GraphQL Gateway;
+- return a redirect URL and an advertisement text.
 
-Exemple :
+Example:
 
 ```graphql
 query GetAds {
@@ -437,46 +353,46 @@ query GetAds {
 }
 ```
 
-Cette opération permet de tester le service `ad` via `ad-dgs`.
+This operation allows the `ad` service to be tested through `ad-dgs`.
 
-Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
+With `contextKeys: []`, the service may return random advertisements.
 
 ## 8. Checkout DGS
 
-Dossier :
+Directory:
 
 ```text
 src/checkout-dgs
 ```
 
-Backend appelé :
+Backend called:
 
 ```text
 checkout:5050
 ```
 
-Protocole backend :
+Backend protocol:
 
 ```text
 gRPC
 ```
 
-Opération exposée :
+Exposed operation:
 
 ```graphql
 placeOrder(input: PlaceOrderInput!): CheckoutOrder!
 ```
 
-Rôle :
+Role:
 
-* exposer le flux de commande via une mutation GraphQL ;
-* appeler le service gRPC `CheckoutService.PlaceOrder` ;
-* transmettre l'utilisateur, la devise, l'adresse, l'email et les informations de paiement ;
-* récupérer le résultat de commande ;
-* retourner les frais de livraison, l'adresse, les items commandés et les références produits ;
-* permettre à `product-catalog-dgs` de résoudre les détails des produits via la fédération.
+- expose the checkout flow through a GraphQL mutation;
+- call the gRPC `CheckoutService.PlaceOrder` service;
+- send the user, currency, address, email and payment information;
+- retrieve the order result;
+- return the shipping cost, address, ordered items and product references;
+- allow `product-catalog-dgs` to resolve product details through federation.
 
-Exemple de fédération validée :
+Validated federation example:
 
 ```graphql
 mutation PlaceOrder {
@@ -536,7 +452,7 @@ mutation PlaceOrder {
 }
 ```
 
-Cette opération démontre une fédération entre :
+This operation demonstrates federation between:
 
 ```text
 cart-dgs -> checkout-dgs -> checkout -> product-catalog-dgs

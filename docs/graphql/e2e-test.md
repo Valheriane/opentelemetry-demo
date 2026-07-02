@@ -1,109 +1,110 @@
-# Test de bout en bout de la Gateway GraphQL
+# GraphQL Gateway End-to-End Test
 
-Ce document décrit le script de test de bout en bout permettant de valider le parcours utilisateur principal via la Gateway GraphQL fédérée.
+This document describes the end-to-end test script used to validate the main user journey through the federated GraphQL Gateway.
 
-## Objectif
+## Objective
 
-Le script permet de vérifier que la Gateway GraphQL est capable d'orchestrer les différents DGS du projet autour d'un scénario complet :
+The script checks that the GraphQL Gateway is able to orchestrate the different DGS of the project through a complete scenario:
 
-```text id="2uxti7"
-consultation catalogue
-consultation fiche produit
-avis produit
-recommandations
-publicités
-estimation livraison
-ajout panier
-checkout complet
+```text
+catalog browsing
+product details
+product reviews
+recommendations
+advertisements
+shipping quote
+add to cart
+complete checkout
 ```
 
-## Script utilisé
+## Script Used
 
-```bash id="te51f5"
+```bash
 ./scripts/test-gateway-e2e.sh
 ```
 
-Le script utilise par défaut :
+By default, the script uses:
 
-```text id="ce4h38"
-Gateway : http://localhost:4000/
-Produit : OLJCESPC7Z
+```text
+Gateway: http://localhost:4000/
+Product: OLJCESPC7Z
 ```
 
-Un identifiant utilisateur unique est généré automatiquement à chaque lancement afin d'éviter les conflits avec les paniers précédents.
+A unique user identifier is automatically generated on each run in order to avoid conflicts with previous carts.
 
-## Lancement
+## Running the Test
 
-Avant de lancer le script, la stack Docker doit être démarrée avec la Gateway et les DGS nécessaires.
+Before running the script, the Docker stack must be started with the Gateway and the required DGS.
 
-```bash id="aw9081"
+```bash
 ./scripts/test-gateway-e2e.sh
 ```
 
-Il est aussi possible de modifier l'URL de la Gateway :
+It is also possible to override the Gateway URL:
 
-```bash id="emfo2p"
+```bash
 GATEWAY_URL=http://localhost:4000/ ./scripts/test-gateway-e2e.sh
 ```
 
-Ou le produit testé :
+Or the tested product:
 
-```bash id="hgotj2"
+```bash
 PRODUCT_ID=OLJCESPC7Z ./scripts/test-gateway-e2e.sh
 ```
 
-## Parcours validé
+## Validated Journey
 
-Le script exécute les étapes suivantes :
+The script executes the following steps:
 
-1. récupération de la liste des produits ;
-2. lecture d'une fiche produit enrichie ;
-3. conversion du prix en EUR ;
-4. récupération des avis produit ;
-5. appel à l'assistant IA produit ;
-6. récupération des recommandations ;
-7. récupération des publicités contextuelles ;
-8. calcul d'un devis de livraison ;
-9. ajout du produit au panier ;
-10. passage de commande via `placeOrder`.
+1. retrieve the product list;
+2. read an enriched product details page;
+3. convert the price to EUR;
+4. retrieve product reviews;
+5. call the product AI assistant;
+6. retrieve recommendations;
+7. retrieve contextual advertisements;
+8. calculate a shipping quote;
+9. add the product to the cart;
+10. place an order through `placeOrder`.
 
-## DGS validés
+## Validated DGS
 
-Le script valide le flux suivant :
+The script validates the following flow:
 
-```text id="koux5u"
+```text
 product-catalog-dgs -> currency-dgs -> product-reviews-dgs -> recommendation-dgs -> ad-dgs -> shipping-dgs -> cart-dgs -> checkout-dgs
 ```
 
-## Résultat attendu
+## Expected Result
 
-En cas de succès, le script affiche :
+On success, the script displays:
 
-```text id="ch9b6x"
+```text
 E2E TEST PASSED
 ```
 
-Il retourne également :
+It also returns:
 
-```text id="ib74rx"
+```text
 Order ID
 Tracking ID
-Nombre d'items commandés
+Number of ordered items
 ```
 
-Ce test constitue une preuve de fonctionnement globale de la Gateway GraphQL fédérée et de son intégration avec les huit DGS implémentés.
+This test provides global proof that the federated GraphQL Gateway works correctly and is properly integrated with the eight implemented DGS.
 
-## Test de bout en bout
+## End-to-End Test
 
-Un script de test permet de valider un parcours utilisateur complet via la Gateway GraphQL :
+A test script validates a complete user journey through the GraphQL Gateway:
 
 ```bash
 ./scripts/test-gateway-e2e.sh
 ```
 
-## Lancement via Makefile
+## Running Through the Makefile
 
-Le scénario complet peut être lancé avec :
+The complete scenario can be launched with:
 
 ```bash
 make demo-graphql
+```
