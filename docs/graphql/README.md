@@ -1,49 +1,50 @@
+
 # GraphQL Federation - OpenTelemetry Astronomy Shop
 
-Ce dossier documente la couche GraphQL fédérée ajoutée au projet OpenTelemetry Astronomy Shop.
+This folder documents the federated GraphQL layer added to the OpenTelemetry Astronomy Shop project.
 
-L'objectif de cette contribution est d'ajouter une Gateway GraphQL fédérée entre le frontend existant et les microservices backend existants, sans modifier les services backend.
+The goal of this contribution is to add a federated GraphQL Gateway between the existing frontend and the existing backend microservices, without modifying the backend services.
 
-La Gateway permet d'exposer une interface GraphQL unifiée au-dessus de plusieurs DGS, chacun responsable d'un domaine métier.
+The Gateway exposes a unified GraphQL interface on top of several DGS, each one responsible for a specific business domain.
 
-## État actuel
+## Current Status
 
-La contribution contient actuellement :
+The contribution currently includes:
 
-- une Gateway Apollo fédérée ;
-- 8 DGS fonctionnels ;
-- une intégration Docker Compose via `compose.extras.yaml` ;
-- des opérations GraphQL de test dans `src/gateway/operations`.
+- a federated Apollo Gateway;
+- 8 functional DGS;
+- a Docker Compose integration through `compose.extras.yaml`;
+- GraphQL test operations in `src/gateway/operations`.
 
-## DGS implémentés
+## Implemented DGS
 
-| DGS | Port | Backend appelé | Protocole | Statut |
+| DGS | Port | Backend called | Protocol | Status |
 |---|---:|---|---|---|
-| `shipping-dgs` | 4004 | `shipping:50050` | HTTP | Fonctionnel |
-| `product-catalog-dgs` | 4005 | `product-catalog:3550` | gRPC | Fonctionnel |
-| `currency-dgs` | 4006 | `currency:7001` | gRPC | Fonctionnel |
-| `cart-dgs` | 4007 | `cart:7070` | gRPC | Fonctionnel |
-| `recommendation-dgs` | 4008 | `recommendation:9001` | gRPC | Fonctionnel |
-| `product-reviews-dgs` | 4009 | `product-reviews:3551` | gRPC | Fonctionnel |
-| `graphql-gateway` | 4000 | DGS GraphQL | GraphQL Federation | Fonctionnel |
-| `ad-dgs` | 4010 | `ad:9555` | gRPC | Fonctionnel |
-| `checkout-dgs` | 4011 | `checkout:5050` | gRPC | Fonctionnel |
+| `shipping-dgs` | 4004 | `shipping:50050` | HTTP | Functional |
+| `product-catalog-dgs` | 4005 | `product-catalog:3550` | gRPC | Functional |
+| `currency-dgs` | 4006 | `currency:7001` | gRPC | Functional |
+| `cart-dgs` | 4007 | `cart:7070` | gRPC | Functional |
+| `recommendation-dgs` | 4008 | `recommendation:9001` | gRPC | Functional |
+| `product-reviews-dgs` | 4009 | `product-reviews:3551` | gRPC | Functional |
+| `graphql-gateway` | 4000 | GraphQL DGS | GraphQL Federation | Functional |
+| `ad-dgs` | 4010 | `ad:9555` | gRPC | Functional |
+| `checkout-dgs` | 4011 | `checkout:5050` | gRPC | Functional |
 
-## Points importants
+## Important Points
 
-La Gateway expose un schéma GraphQL unique composé à partir des différents DGS.
+The Gateway exposes a single GraphQL schema composed from the different DGS.
 
-Trois cas de fédération entre DGS sont actuellement démontrés :
+Several federation use cases between DGS are currently demonstrated:
 
-1. `cart-dgs` expose les items du panier avec des références produit, et `product-catalog-dgs` résout les détails des produits.
-2. `currency-dgs` étend le type `Product` pour exposer un prix converti via `price(currencyCode: String!)`.
-3. `recommendation-dgs` retourne des références produit, puis `product-catalog-dgs` et `currency-dgs` enrichissent la réponse finale.
+1. `cart-dgs` exposes cart items with product references, and `product-catalog-dgs` resolves the product details.
+2. `currency-dgs` extends the `Product` type to expose a converted price through `price(currencyCode: String!)`.
+3. `recommendation-dgs` returns product references, then `product-catalog-dgs` and `currency-dgs` enrich the final response.
 
-Cela permet par exemple de demander un panier avec ses produits, un produit avec son prix converti, ou des recommandations avec les détails produits et les prix convertis.
+This allows clients, for example, to request a cart with its products, a product with its converted price, or recommendations with product details and converted prices.
 
-## Lancement local
+## Local Startup
 
-Depuis la racine du projet :
+From the project root:
 
 ```bash
 docker compose -f compose.yaml -f compose.extras.yaml up -d --build \
@@ -54,16 +55,17 @@ docker compose -f compose.yaml -f compose.extras.yaml up -d --build \
   recommendation-dgs \
   product-reviews-dgs \
   ad-dgs \
+  checkout-dgs \
   graphql-gateway
 ````
 
-La Gateway est ensuite disponible sur :
+The Gateway is then available at:
 
 ```text
 http://localhost:4000/
 ```
 
-## Health checks
+## Health Checks
 
 ```bash
 curl http://localhost:4004/health
@@ -73,17 +75,18 @@ curl http://localhost:4007/health
 curl http://localhost:4008/health
 curl http://localhost:4009/health
 curl http://localhost:4010/health
+curl http://localhost:4011/health
 ```
 
-## Opérations GraphQL de test
+## GraphQL Test Operations
 
-Les opérations de test sont stockées dans :
+The test operations are stored in:
 
 ```text
 src/gateway/operations
 ```
 
-Elles peuvent être exécutées avec :
+They can be executed with:
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/<operation>.graphql \
@@ -91,4 +94,3 @@ jq -Rs '{query: .}' src/gateway/operations/<operation>.graphql \
       -H "content-type: application/json" \
       --data-binary @- | jq
 ```
-

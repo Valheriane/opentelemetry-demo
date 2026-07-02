@@ -1,14 +1,14 @@
 # GraphQL Operations
 
-Les opérations GraphQL de test sont stockées dans :
+The GraphQL test operations are stored in:
 
 ```text
 src/gateway/operations
-````
+```
 
-Elles servent à valider manuellement que la Gateway expose correctement les fonctionnalités implémentées par les DGS.
+They are used to manually validate that the Gateway correctly exposes the features implemented by the DGS.
 
-## Commande générique
+## Generic Command
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/<operation>.graphql \
@@ -88,7 +88,7 @@ jq -Rs '{query: .}' src/gateway/operations/empty-cart.graphql \
       --data-binary @- | jq
 ```
 
-## Fédération Product / Currency
+## Product / Currency Federation
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/get-product-with-converted-price.graphql \
@@ -97,12 +97,11 @@ jq -Rs '{query: .}' src/gateway/operations/get-product-with-converted-price.grap
       --data-binary @- | jq
 ```
 
-Cette opération démontre que :
+This operation demonstrates that:
 
-* `product-catalog-dgs` fournit le produit et son prix USD ;
-* `currency-dgs` étend le type `Product` ;
-* la Gateway assemble la réponse finale.
-
+- `product-catalog-dgs` provides the product and its USD price;
+- `currency-dgs` extends the `Product` type;
+- the Gateway assembles the final response.
 
 ## Product Reviews
 
@@ -111,7 +110,7 @@ jq -Rs '{query: .}' src/gateway/operations/get-product-reviews.graphql \
   | curl -s http://localhost:4000/ \
       -H "content-type: application/json" \
       --data-binary @- | jq
-`````
+```
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/get-average-product-review-score.graphql \
@@ -141,7 +140,7 @@ jq -Rs '{query: .}' src/gateway/operations/get-product-with-reviews-and-ai.graph
       --data-binary @- | jq
 ```
 
-Ces opérations valident les trois appels gRPC du service `ProductReviewService` et la fédération autour du type `Product`.
+These operations validate the three gRPC calls of the `ProductReviewService` and the federation around the `Product` type.
 
 ## Ad
 
@@ -152,13 +151,13 @@ jq -Rs '{query: .}' src/gateway/operations/get-ads.graphql \
       --data-binary @- | jq
 ```
 
-Cette opération valide l'appel au service `ad` via `ad-dgs`.
+This operation validates the call to the `ad` service through `ad-dgs`.
 
-Avec `contextKeys: []`, le service peut retourner des publicités aléatoires.
+With `contextKeys: []`, the service may return random advertisements.
 
 ## Checkout
 
-Avant de passer une commande, il faut préparer un panier pour le même utilisateur.
+Before placing an order, a cart must be prepared for the same user.
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/prepare-checkout-cart.graphql \
@@ -167,7 +166,7 @@ jq -Rs '{query: .}' src/gateway/operations/prepare-checkout-cart.graphql \
       --data-binary @- | jq
 ```
 
-Puis lancer la mutation de commande :
+Then run the order mutation:
 
 ```bash
 jq -Rs '{query: .}' src/gateway/operations/place-order.graphql \
@@ -176,7 +175,7 @@ jq -Rs '{query: .}' src/gateway/operations/place-order.graphql \
       --data-binary @- | jq
 ```
 
-Cette opération valide le flux fédéré :
+This operation validates the federated flow:
 
 ```text
 cart-dgs -> checkout-dgs -> checkout -> product-catalog-dgs
