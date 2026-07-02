@@ -358,4 +358,23 @@ demo-graphql: start-graphql wait-graphql-gateway test-graphql-gateway
 	@echo ""
 	@echo "GraphQL demo flow completed successfully."
 
+.PHONY: wait-frontend
+wait-frontend:
+	@echo "Waiting for Frontend on http://localhost:8080/ ..."
+	@for i in $$(seq 1 60); do \
+		if curl -fsS http://localhost:8080/ > /dev/null 2>&1; then \
+			echo "Frontend is ready."; \
+			exit 0; \
+		fi; \
+		echo "Frontend not ready yet... ($$i/60)"; \
+		sleep 5; \
+	done; \
+	echo "Frontend did not become ready in time."; \
+	exit 1
 
+.PHONY: demo-full-graphql
+demo-full-graphql: start wait-frontend wait-graphql-gateway test-graphql-gateway
+	@echo ""
+	@echo "Full OpenTelemetry Demo + GraphQL flow completed successfully."
+	@echo "Frontend UI: http://localhost:8080"
+	@echo "GraphQL Gateway: http://localhost:4000/"
